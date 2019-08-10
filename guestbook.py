@@ -47,18 +47,24 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
 
 
 # [START greeting]
+class Subject(ndb.Model):
+    """My model for a subject"""
+    subject = ndb.StringProperty(indexed=False)
+
+
 class Author(ndb.Model):
     """Sub model for representing an author."""
     identity = ndb.StringProperty(indexed=False)
     email = ndb.StringProperty(indexed=False)
+# [END greeting]
 
 
 class Greeting(ndb.Model):
     """A main model for representing an individual Guestbook entry."""
     author = ndb.StructuredProperty(Author)
+    subject = ndb.StringProperty(indexed=False)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
-# [END greeting]
 
 
 # [START main_page]
@@ -99,7 +105,7 @@ class Guestbook(webapp2.RequestHandler):
         # We set the same parent key on the 'Greeting' to ensure each
         # Greeting is in the same entity group. Queries across the
         # single entity group will be consistent. However, the write
-        # rate to a single entity group should be limited to
+        # rae to a single entity group should be limited to
         # ~1/second.
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
@@ -111,6 +117,7 @@ class Guestbook(webapp2.RequestHandler):
                     email=users.get_current_user().email())
 
         greeting.content = self.request.get('content')
+        greeting.subject = self.request.get('subject')
         greeting.put()
 
         query_params = {'guestbook_name': guestbook_name}

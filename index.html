@@ -61,12 +61,14 @@
         {% else %}
           An anonymous person wrote:
         {% endif %}
+        <blockquote>{{ greeting.subject }}</blockquote>
         <blockquote>{{ greeting.content }}</blockquote>
       </div>
       {% endfor %}
       <!-- [END greetings] -->
 
       <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+        <div><textarea name="subject" class="input-block-level" rows="1"></textarea></div>
         <div><textarea name="content" class="input-block-level" rows="3"></textarea></div>
         <div><input type="submit" class="btn btn-large btn-primary" value="Sign Guestbook"></div>
       </form>
